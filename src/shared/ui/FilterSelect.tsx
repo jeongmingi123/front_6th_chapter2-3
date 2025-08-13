@@ -1,4 +1,4 @@
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../components/index"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./index"
 
 interface FilterSelectProps {
   value: string
