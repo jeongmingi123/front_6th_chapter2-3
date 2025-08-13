@@ -1,19 +1,20 @@
-import { Button, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../components/index"
+import { useAtom } from "jotai"
+import { Button, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../shared/ui/index"
+import { skipAtom, limitAtom, totalPostsAtom } from "../../store/postsAtoms"
 
-interface PostsListPaginationProps {
-  skip: number
-  limit: number
-  total: number
-  onSkipChange: (skip: number) => void
-  onLimitChange: (limit: number) => void
-}
+export const PostsListPagination = () => {
+  const [skip, setSkip] = useAtom(skipAtom)
+  const [limit, setLimit] = useAtom(limitAtom)
+  const [total] = useAtom(totalPostsAtom)
 
-export const PostsListPagination = ({ skip, limit, total, onSkipChange, onLimitChange }: PostsListPaginationProps) => {
+  const handleSkipChange = (newSkip: number) => setSkip(newSkip)
+  const handleLimitChange = (newLimit: number) => setLimit(newLimit)
+
   return (
     <div className="flex justify-between items-center">
       <div className="flex items-center gap-2">
         <span>표시</span>
-        <Select value={limit.toString()} onValueChange={(value) => onLimitChange(Number(value))}>
+        <Select value={limit.toString()} onValueChange={(value) => handleLimitChange(Number(value))}>
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="10" />
           </SelectTrigger>
@@ -26,10 +27,10 @@ export const PostsListPagination = ({ skip, limit, total, onSkipChange, onLimitC
         <span>항목</span>
       </div>
       <div className="flex gap-2">
-        <Button disabled={skip === 0} onClick={() => onSkipChange(Math.max(0, skip - limit))}>
+        <Button disabled={skip === 0} onClick={() => handleSkipChange(Math.max(0, skip - limit))}>
           이전
         </Button>
-        <Button disabled={skip + limit >= total} onClick={() => onSkipChange(skip + limit)}>
+        <Button disabled={skip + limit >= total} onClick={() => handleSkipChange(skip + limit)}>
           다음
         </Button>
       </div>

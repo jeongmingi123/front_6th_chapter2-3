@@ -1,38 +1,28 @@
 import { Search } from "lucide-react"
-import { Input } from "../../components/index"
-import { FilterSelect } from "../../shared/ui/FilterSelect"
-import { TagSelect } from "../../features/post/TagSelect"
-import { SortBySelect } from "../../features/post/SortBySelect"
-import { SortOrderSelect } from "../../features/post/SortOrderSelect"
-import { Tag } from "../../types"
+import { useAtom } from "jotai"
+import { Input } from "../../shared/ui/index"
+import { SelectTag } from "../../features/select-tag/ui/SelectTag"
+import { SortBySelect } from "../../features/sort-by-select/ui/SortBySelect"
+import { SortOrderSelect } from "../../features/sort-order-select/ui/SortOrderSelect"
+import { searchQueryAtom, selectedTagAtom, sortByAtom, tagsAtom } from "../../store/postsAtoms"
+import { usePosts } from "../../features/post/hooks/usePosts"
 
-interface PostsListFilterProps {
-  searchQuery: string
-  setSearchQuery: (query: string) => void
-  selectedTag: string
-  setSelectedTag: (tag: string) => void
-  sortBy: string
-  setSortBy: (sortBy: string) => void
-  sortOrder: string
-  setSortOrder: (sortOrder: string) => void
-  tags: Tag[]
-  onSearch: () => void
-  onTagChange: (tag: string) => void
-}
+export const PostsListFilter = () => {
+  const [searchQuery, setSearchQuery] = useAtom(searchQueryAtom)
+  const [selectedTag, setSelectedTag] = useAtom(selectedTagAtom)
+  const [sortBy, setSortBy] = useAtom(sortByAtom)
+  const [tags] = useAtom(tagsAtom)
 
-export const PostsListFilter = ({
-  searchQuery,
-  setSearchQuery,
-  selectedTag,
-  setSelectedTag,
-  sortBy,
-  setSortBy,
-  sortOrder,
-  setSortOrder,
-  tags,
-  onSearch,
-  onTagChange,
-}: PostsListFilterProps) => {
+  const { searchPosts } = usePosts()
+
+  const handleSearch = () => {
+    searchPosts(searchQuery)
+  }
+
+  const handleTagChange = (tag: string) => {
+    setSelectedTag(tag)
+  }
+
   return (
     <div className="flex gap-4">
       <div className="flex-1">
@@ -43,13 +33,13 @@ export const PostsListFilter = ({
             className="pl-8"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            onKeyPress={(e) => e.key === "Enter" && onSearch()}
+            onKeyPress={(e) => e.key === "Enter" && handleSearch()}
           />
         </div>
       </div>
-      <TagSelect selectedTag={selectedTag} setSelectedTag={setSelectedTag} tags={tags} onTagChange={onTagChange} />
-      <SortBySelect value={sortBy} onValueChange={setSortBy} />
-      <SortOrderSelect value={sortOrder} onValueChange={setSortOrder} />
+      <SelectTag selectedTag={selectedTag} setSelectedTag={setSelectedTag} tags={tags} onTagChange={handleTagChange} />
+      <SortBySelect />
+      <SortOrderSelect />
     </div>
   )
 }

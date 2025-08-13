@@ -1,29 +1,22 @@
 import React from "react"
-import { Button, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../components"
-import { Post, Tag } from "../../types"
-import { Eye, Edit, Trash2, MessageSquare, ThumbsDown, ThumbsUp, Edit2 } from "lucide-react"
+import { useAtom } from "jotai"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../shared/ui"
+import { ThumbsDown, ThumbsUp } from "lucide-react"
+import { OpenEditPost } from "../../features/open-edit-post/ui/OpenEditPost"
+import { RemovePostIcon } from "../../features/remove-post-icon/ui/RemovePostIcon"
+import { OpenDetailPost } from "../../features/open-detail-post/ui/OpenDetailPost"
+import { postsAtom, searchQueryAtom, selectedTagAtom } from "../../store/postsAtoms"
+import { useComments } from "../../features/comment/hooks/useComments"
+import { usePostDialogs } from "../../features/post/hooks/usePostDialogs"
 
-interface PostsListTableProps {
-  posts: Post[]
-  searchQuery: string
-  selectedTag: string
-  setSelectedTag: (tag: string) => void
-  onPostDetail: (post: Post) => void
-  onEditPost: (post: Post) => void
-  onDeletePost: (id: number) => void
-  onUserModal: (user: any) => void
-}
+export const PostsListTable: React.FC = () => {
+  const [posts] = useAtom(postsAtom)
+  const [searchQuery] = useAtom(searchQueryAtom)
+  const [selectedTag, setSelectedTag] = useAtom(selectedTagAtom)
 
-export const PostsListTable: React.FC<PostsListTableProps> = ({
-  posts,
-  searchQuery,
-  selectedTag,
-  setSelectedTag,
-  onPostDetail,
-  onEditPost,
-  onDeletePost,
-  onUserModal,
-}) => {
+  const { fetchComments } = useComments()
+  const { openUserModal } = usePostDialogs()
+
   // 검색어와 태그에 따른 필터링
   const filteredPosts = posts.filter((post) => {
     const matchesSearch =
@@ -91,7 +84,10 @@ export const PostsListTable: React.FC<PostsListTableProps> = ({
                 </div>
               </TableCell>
               <TableCell>
-                <div className="flex items-center space-x-2 cursor-pointer" onClick={() => onUserModal(post.author)}>
+                <div
+                  className="flex items-center space-x-2 cursor-pointer"
+                  onClick={() => post.author && openUserModal(post.author)}
+                >
                   <img src={post.author?.image} alt={post.author?.username} className="w-8 h-8 rounded-full" />
                   <span>{post.author?.username}</span>
                 </div>
@@ -105,23 +101,9 @@ export const PostsListTable: React.FC<PostsListTableProps> = ({
                 </div>
               </TableCell>
               <TableCell>
-                <div className="flex items-center gap-2">
-                  <Button variant="ghost" size="sm" onClick={() => onPostDetail(post)}>
-                    <MessageSquare className="w-4 h-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => {
-                      onEditPost(post)
-                    }}
-                  >
-                    <Edit2 className="w-4 h-4" />
-                  </Button>
-                  <Button variant="ghost" size="sm" onClick={() => onDeletePost(post.id)}>
-                    <Trash2 className="w-4 h-4" />
-                  </Button>
-                </div>
+                <OpenDetailPost post={post} fetchComments={fetchComments} />
+                <OpenEditPost post={post} />
+                <RemovePostIcon postId={post.id} />
               </TableCell>
             </TableRow>
           ))}
