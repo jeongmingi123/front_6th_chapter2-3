@@ -6,11 +6,10 @@ import { useOpenDetailPost } from "../model/useOpenDetailPost"
 
 interface OpenDetailPostProps {
   post: Post
-  fetchComments: (postId: number) => void
 }
 
-export const OpenDetailPost: React.FC<OpenDetailPostProps> = ({ post, fetchComments }) => {
-  const { openPostDetail } = useOpenDetailPost(fetchComments)
+export const OpenDetailPost: React.FC<OpenDetailPostProps> = ({ post }) => {
+  const { openPostDetail } = useOpenDetailPost()
 
   return (
     <Button variant="ghost" size="sm" onClick={() => openPostDetail(post)}>
