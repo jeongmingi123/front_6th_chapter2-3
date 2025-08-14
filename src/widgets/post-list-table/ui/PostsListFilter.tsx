@@ -1,5 +1,3 @@
-import { useAtom } from "jotai"
-import { sortByAtom } from "../../../store/postsAtoms"
 import { SelectTag } from "../../../features/filter/ui/SelectTag"
 import { SortBySelect } from "../../../features/filter/ui/SortBySelect"
 import { SortOrderSelect } from "../../../features/filter/ui/SortOrderSelect"
