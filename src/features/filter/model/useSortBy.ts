@@ -1,12 +1,11 @@
-import { useAtom } from "jotai"
-import { sortByAtom } from "../../../store/postsAtoms"
+import { usePostFilters } from "../../post/model/usePostFilters"
 
 /**
  * 정렬 기준을 관리하는 hook
- * Jotai atom을 사용해서 전역 상태로 정렬 기준을 관리합니다.
+ * usePostFilters 훅을 사용해서 정렬 기준을 관리합니다.
  */
 export const useSortBy = () => {
-  const [sortBy, setSortBy] = useAtom(sortByAtom)
+  const { sortBy, setSortBy } = usePostFilters()
 
   /**
    * 정렬 기준을 변경하는 함수
