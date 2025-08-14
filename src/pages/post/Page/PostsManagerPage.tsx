@@ -1,10 +1,10 @@
 import { useEffect } from "react"
 import { useSetAtom, useAtom } from "jotai"
 import { Card, CardContent, CardHeader, CardTitle, PostDetailDialogWrapper } from "../../../shared/ui"
-import AddPostButton from "../../../features/add-post-button/ui/AddPostButton"
-import { usePosts } from "../../../features/post/model/usePosts"
+import AddPostButton from "../../../features/post/ui/AddPostButton"
 import { usePostFilters } from "../../../features/post/model/usePostFilters"
 import { usePostDialogs } from "../../../features/post/model/usePostDialogs"
+import { usePostSearch } from "../../../features/post/model/usePostSearch"
 import { AddPostDialog, EditPostDialog } from "../../../widgets"
 import { PostsListFilter } from "../../../widgets/post-list-table/ui/PostsListFilter"
 import { UserDialog } from "../../../widgets/user-dialog/UserDialog"
@@ -12,29 +12,20 @@ import { EditCommentDialog } from "../../../widgets/comment-dialog/ui/EditCommen
 import { AddCommentDialog } from "../../../widgets/comment-dialog/ui/AddCommentDialog"
 import { PostsListPagination } from "../../../widgets/post-list-table/ui/PostsListPagination"
 import { PostsListTable } from "../../../widgets/post-list-table/ui/PostsListTable"
-import { deletePostAtom } from "../../../features/post/model/useRemovePost"
-import { commentsAtom, searchQueryAtom } from "../../../store/postsAtoms"
+import { commentsAtom } from "../../../store/postsAtoms"
 import { externalSortOrderAtom, setSortOrderAtom } from "../../../features/filter/model/useSortOrder"
 
 const PostsManager = () => {
-  const setDeletePost = useSetAtom(deletePostAtom)
   const setExternalSortOrder = useSetAtom(externalSortOrderAtom)
   const setSortOrderExternal = useSetAtom(setSortOrderAtom)
 
   // 커스텀 훅들 사용
-  const { loading, deletePost } = usePosts()
-
   const { sortOrder, setSortOrder } = usePostFilters()
-
   const { openAddDialog } = usePostDialogs()
+  const { setSearchQuery } = usePostSearch()
 
   // 댓글 관련 상태를 atoms에 연결
   const [, setCommentsAtom] = useAtom(commentsAtom)
-  const [, setSearchQueryAtom] = useAtom(searchQueryAtom)
-
-  useEffect(() => {
-    setDeletePost(() => deletePost)
-  }, [setDeletePost, deletePost])
 
   useEffect(() => {
     setExternalSortOrder(sortOrder)
@@ -49,10 +40,10 @@ const PostsManager = () => {
     setCommentsAtom([])
   }, [setCommentsAtom])
 
-  // 검색 쿼리를 atoms에 동기화 (필요한 경우)
+  // 검색 쿼리를 초기화
   useEffect(() => {
-    setSearchQueryAtom("")
-  }, [setSearchQueryAtom])
+    setSearchQuery("")
+  }, [setSearchQuery])
 
   return (
     <Card className="w-full max-w-6xl mx-auto">
@@ -68,7 +59,7 @@ const PostsManager = () => {
           <PostsListFilter />
 
           {/* 게시물 테이블 */}
-          {loading ? <div className="flex justify-center p-4">로딩 중...</div> : <PostsListTable />}
+          <PostsListTable />
 
           {/* 페이지네이션 */}
           <PostsListPagination />
