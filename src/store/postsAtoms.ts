@@ -8,9 +8,9 @@ export const loadingAtom = atom<boolean>(false)
 
 // 검색 및 필터링 상태
 export const searchQueryAtom = atom<string>("")
-export const selectedTagAtom = atom<string>("")
-export const sortByAtom = atom<string>("")
-export const sortOrderAtom = atom<string>("asc")
+export const selectedTagAtom = atom<string>("") // 빈 문자열은 유효한 초기값
+export const sortByAtom = atom<string>("") // 빈 문자열은 유효한 초기값
+export const sortOrderAtom = atom<string>("asc") // 기본값을 명시적으로 설정
 
 // 페이지네이션 상태
 export const skipAtom = atom<number>(0)
