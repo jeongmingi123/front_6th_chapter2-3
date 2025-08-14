@@ -1,6 +1,7 @@
 import { useAtom, useSetAtom } from "jotai"
 import { commentsAtom, selectedCommentAtom } from "../../../store/postsAtoms"
 import { commentApi } from "../api/commentApi"
+import { NewComment } from "../../../types"
 
 export const useComments = () => {
   const [comments, setComments] = useAtom(commentsAtom)
@@ -16,7 +17,7 @@ export const useComments = () => {
     }
   }
 
-  const addComment = async (newComment: any) => {
+  const addComment = async (newComment: NewComment) => {
     try {
       const data = await commentApi.addComment(newComment)
       setComments((prev) => ({
