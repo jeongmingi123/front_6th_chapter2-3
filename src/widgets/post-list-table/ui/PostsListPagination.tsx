@@ -1,6 +1,6 @@
 import { useAtom } from "jotai"
-import { Button, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../shared/ui/index"
-import { skipAtom, limitAtom, totalPostsAtom } from "../../store/postsAtoms"
+import { Button, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../../shared/ui/index"
+import { skipAtom, limitAtom, totalPostsAtom } from "../../../store/postsAtoms"
 
 export const PostsListPagination = () => {
   const [skip, setSkip] = useAtom(skipAtom)

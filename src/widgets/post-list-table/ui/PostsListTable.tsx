@@ -1,13 +1,13 @@
 import React from "react"
 import { useAtom } from "jotai"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../shared/ui"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../shared/ui"
 import { ThumbsDown, ThumbsUp } from "lucide-react"
-import { OpenEditPost } from "../../features/open-edit-post/ui/OpenEditPost"
-import { RemovePostIcon } from "../../features/remove-post-icon/ui/RemovePostIcon"
-import { OpenDetailPost } from "../../features/open-detail-post/ui/OpenDetailPost"
-import { postsAtom, searchQueryAtom, selectedTagAtom } from "../../store/postsAtoms"
-import { useComments } from "../../features/comment/hooks/useComments"
-import { usePostDialogs } from "../../features/post/hooks/usePostDialogs"
+import { postsAtom, searchQueryAtom, selectedTagAtom } from "../../../store/postsAtoms"
+import { useComments } from "../../../features/comment/hooks/useComments"
+import { usePostDialogs } from "../../../features/post/model/usePostDialogs"
+import { OpenEditPost } from "../../../features/post/ui/OpenEditPost"
+import { OpenDetailPost } from "../../../features/post/ui/OpenDetailPost"
+import { RemovePostIcon } from "../../../features/post/ui/RemovePostIcon"
 
 export const PostsListTable: React.FC = () => {
   const [posts] = useAtom(postsAtom)
