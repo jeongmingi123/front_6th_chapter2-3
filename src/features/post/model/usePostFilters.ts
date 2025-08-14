@@ -1,28 +1,24 @@
 import { useAtom } from "jotai"
 import { useEffect } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
-import {
-  searchQueryAtom,
-  selectedTagAtom,
-  sortByAtom,
-  sortOrderAtom,
-  skipAtom,
-  limitAtom,
-  tagsAtom,
-} from "../../../store/postsAtoms"
-import { postsApi } from "../../../entities/post/api/postsApi"
+import { selectedTagAtom, sortByAtom, sortOrderAtom, skipAtom, limitAtom } from "../../../store/postsAtoms"
+import { usePostSearch } from "./usePostSearch"
+import { useTags } from "../../../entities/post/api"
 
 export const usePostFilters = () => {
   const navigate = useNavigate()
   const location = useLocation()
 
-  const [searchQuery, setSearchQuery] = useAtom(searchQueryAtom)
+  const { searchQuery, setSearchQuery } = usePostSearch()
   const [selectedTag, setSelectedTag] = useAtom(selectedTagAtom)
   const [sortBy, setSortBy] = useAtom(sortByAtom)
   const [sortOrder, setSortOrder] = useAtom(sortOrderAtom)
   const [skip, setSkip] = useAtom(skipAtom)
   const [limit, setLimit] = useAtom(limitAtom)
-  const [tags, setTags] = useAtom(tagsAtom)
+
+  // TanStack Query 훅 사용
+  const tagsQuery = useTags()
+  const tags = tagsQuery.data || []
 
   const updateURL = () => {
     const params = new URLSearchParams()
@@ -35,15 +31,6 @@ export const usePostFilters = () => {
     navigate(`?${params.toString()}`)
   }
 
-  const fetchTags = async () => {
-    try {
-      const data = await postsApi.getTags()
-      setTags(data)
-    } catch (error) {
-      console.error("태그 가져오기 오류:", error)
-    }
-  }
-
   const handleTagChange = (tag: string) => {
     setSelectedTag(tag)
     updateURL()
@@ -53,12 +40,8 @@ export const usePostFilters = () => {
   const handleLimitChange = (newLimit: number) => setLimit(newLimit)
 
   useEffect(() => {
-    fetchTags()
-  }, [])
-
-  useEffect(() => {
     updateURL()
-  }, [skip, limit, sortBy, sortOrder, selectedTag])
+  }, [skip, limit, sortBy, sortOrder, selectedTag, searchQuery])
 
   useEffect(() => {
     const params = new URLSearchParams(location.search)
@@ -68,7 +51,7 @@ export const usePostFilters = () => {
     setSortBy(params.get("sortBy") || "")
     setSortOrder(params.get("sortOrder") || "asc")
     setSelectedTag(params.get("tag") || "")
-  }, [location.search])
+  }, [location.search, setSearchQuery, setSortBy, setSortOrder, setSelectedTag, setSkip, setLimit])
 
   return {
     searchQuery,
