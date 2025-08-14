@@ -248,5 +248,5 @@ TableCell.displayName = "TableCell"
 
 // 새로 생성한 컴포넌트들
 export { AddPostDialog, EditPostDialog, PostDetailDialog } from "../../widgets"
-export { PostDetailDialogWrapper } from "../../features/open-detail-post/ui/PostDetailDialogWrapper"
+export { PostDetailDialogWrapper } from "../../features/post/ui/PostDetailDialogWrapper"
 export { DialogLayout } from "./Dialog"
