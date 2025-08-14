@@ -1,7 +1,5 @@
-import React from "react"
 import { useAtom } from "jotai"
 import { DialogLayout, Input, Textarea, Button } from "../../../shared/ui/index"
-import { NewPost } from "../../../types"
 import { showAddDialogAtom, newPostAtom } from "../../../store/postsAtoms"
 import { usePosts } from "../../../features/post/model/usePosts"
 
