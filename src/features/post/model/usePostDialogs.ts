@@ -9,7 +9,7 @@ import {
   selectedUserAtom,
   selectedCommentAtom,
 } from "../../../store/postsAtoms"
-import { NewPost, NewComment, User, Comment } from "../../../types"
+import { User, Comment } from "../../../types"
 
 export const usePostDialogs = () => {
   const [showAddDialog, setShowAddDialog] = useAtom(showAddDialogAtom)
