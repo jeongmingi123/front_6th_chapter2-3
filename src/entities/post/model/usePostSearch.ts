@@ -1,6 +1,6 @@
 import { useAtom } from "jotai"
 import { searchQueryAtom } from "../../../store/postsAtoms"
-import { useSearchPosts } from "../../../entities/post/api"
+import { useSearchPosts } from "../api"
 
 export const usePostSearch = () => {
   const [searchQuery, setSearchQuery] = useAtom(searchQueryAtom)
