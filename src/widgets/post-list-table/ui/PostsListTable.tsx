@@ -2,44 +2,46 @@ import React from "react"
 import { useAtom } from "jotai"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../shared/ui"
 import { ThumbsDown, ThumbsUp } from "lucide-react"
-import { postsAtom, searchQueryAtom, selectedTagAtom } from "../../../store/postsAtoms"
-import { useComments } from "../../../features/comment/hooks/useComments"
+import { selectedTagAtom } from "../../../store/postsAtoms"
+import { usePostSearch } from "../../../features/post/model/usePostSearch"
 import { usePostDialogs } from "../../../features/post/model/usePostDialogs"
+import { usePosts } from "../../../features/post/model/usePosts"
 import { OpenEditPost } from "../../../features/post/ui/OpenEditPost"
 import { OpenDetailPost } from "../../../features/post/ui/OpenDetailPost"
 import { RemovePostIcon } from "../../../features/post/ui/RemovePostIcon"
+import { filterPosts } from "../lib/post"
+import { highlightTextParts } from "../../../lib/textHighlight"
 
 export const PostsListTable: React.FC = () => {
-  const [posts] = useAtom(postsAtom)
-  const [searchQuery] = useAtom(searchQueryAtom)
+  const { posts, loading } = usePosts()
   const [selectedTag, setSelectedTag] = useAtom(selectedTagAtom)
+  const { searchQuery } = usePostSearch()
 
-  const { fetchComments } = useComments()
   const { openUserModal } = usePostDialogs()
 
+  // 로딩 중이면 로딩 메시지 표시
+  if (loading) {
+    return <div className="flex justify-center p-4">로딩 중...</div>
+  }
+
+  // 게시물이 없으면 메시지 표시
+  if (!posts || posts.length === 0) {
+    return <div className="text-gray-500 p-4">표시할 게시물이 없습니다.</div>
+  }
+
   // 검색어와 태그에 따른 필터링
-  const filteredPosts = posts.filter((post) => {
-    const matchesSearch =
-      post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      post.body.toLowerCase().includes(searchQuery.toLowerCase())
-    const matchesTag = !selectedTag || (post.tags && post.tags.includes(selectedTag))
-    return matchesSearch && matchesTag
-  })
+  const filteredPosts = filterPosts(posts, searchQuery, selectedTag)
 
   // 검색어 하이라이트 함수
   const highlightText = (text: string, query: string) => {
-    if (!query.trim()) return text
-
-    const regex = new RegExp(`(${query})`, "gi")
-    const parts = text.split(regex)
-
+    const parts = highlightTextParts(text, query)
     return parts.map((part, index) =>
-      regex.test(part) ? (
+      part.isHighlight ? (
         <mark key={index} className="bg-yellow-200 font-semibold">
-          {part}
+          {part.text}
         </mark>
       ) : (
-        part
+        part.text
       ),
     )
   }
@@ -101,7 +103,7 @@ export const PostsListTable: React.FC = () => {
                 </div>
               </TableCell>
               <TableCell>
-                <OpenDetailPost post={post} fetchComments={fetchComments} />
+                <OpenDetailPost post={post} />
                 <OpenEditPost post={post} />
                 <RemovePostIcon postId={post.id} />
               </TableCell>
