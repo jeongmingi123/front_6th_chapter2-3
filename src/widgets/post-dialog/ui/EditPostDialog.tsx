@@ -1,15 +1,15 @@
-import React from "react"
 import { DialogLayout, Input, Textarea, Button } from "../../../shared/ui/index"
 import { Post } from "../../../types"
 import { usePosts } from "../../../features/post/model/usePosts"
 import { useOpenEditPost } from "../../../features/post/model/useOpenEditPost"
+import { useEffect, useState } from "react"
 
 export const EditPostDialog = () => {
   const { editPost, isEditModalOpen, closeEditPost } = useOpenEditPost()
-  const [editingPost, setEditingPost] = React.useState<Post | null>(null)
+  const [editingPost, setEditingPost] = useState<Post | null>(null)
   const { updatePost } = usePosts()
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (editPost) {
       setEditingPost({ ...editPost })
     }
