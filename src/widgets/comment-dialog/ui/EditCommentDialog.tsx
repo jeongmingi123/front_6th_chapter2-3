@@ -1,6 +1,6 @@
 import { useAtom } from "jotai"
 import { showEditCommentDialogAtom, selectedCommentAtom } from "../../../store/postsAtoms"
-import { useComments } from "../../../features/comment/hooks/useComments"
+import { useComments } from "../../../features/comment/model/useComments"
 import { CommentDialog } from "../../../shared/ui/CommentDialog"
 
 export const EditCommentDialog = () => {

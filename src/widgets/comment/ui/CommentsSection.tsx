@@ -10,7 +10,9 @@ interface CommentsSectionProps {
   onAddComment: (postId: number) => void
   onEditComment: (comment: Comment) => void
   onDeleteComment: (id: number, postId: number) => void
-  onLikeComment: (id: number, postId: number) => void
+  onLikeComment: (id: number) => void
+  isLoading?: boolean
+  error?: Error | null
 }
 
 export const CommentsSection = ({
@@ -21,7 +23,31 @@ export const CommentsSection = ({
   onEditComment,
   onDeleteComment,
   onLikeComment,
+  isLoading = false,
+  error = null,
 }: CommentsSectionProps) => {
+  if (isLoading) {
+    return (
+      <div className="mt-2">
+        <div className="flex items-center justify-between mb-2">
+          <h3 className="text-sm font-semibold">댓글</h3>
+        </div>
+        <div className="text-sm text-gray-500">댓글을 불러오는 중...</div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="mt-2">
+        <div className="flex items-center justify-between mb-2">
+          <h3 className="text-sm font-semibold">댓글</h3>
+        </div>
+        <div className="text-sm text-red-500">댓글을 불러오는데 실패했습니다: {error.message}</div>
+      </div>
+    )
+  }
+
   return (
     <div className="mt-2">
       <div className="flex items-center justify-between mb-2">
@@ -44,7 +70,7 @@ export const CommentsSection = ({
               />
             </div>
             <div className="flex items-center space-x-1">
-              <Button variant="ghost" size="sm" onClick={() => onLikeComment(comment.id, postId)}>
+              <Button variant="ghost" size="sm" onClick={() => onLikeComment(comment.id)}>
                 <ThumbsUp className="w-3 h-3" />
                 <span className="ml-1 text-xs">{comment.likes}</span>
               </Button>
