@@ -3,11 +3,7 @@ import { Input } from "../../../shared/ui/index"
 import { usePostSearch } from "../model/usePostSearch"
 
 export const PostSearch = () => {
-  const { searchQuery, setSearchQuery, searchPosts } = usePostSearch()
-
-  const handleSearch = () => {
-    searchPosts(searchQuery)
-  }
+  const { searchQuery, setSearchQuery } = usePostSearch()
 
   return (
     <div className="flex-1">
@@ -18,7 +14,6 @@ export const PostSearch = () => {
           className="pl-8"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          onKeyPress={(e) => e.key === "Enter" && handleSearch()}
         />
       </div>
     </div>
