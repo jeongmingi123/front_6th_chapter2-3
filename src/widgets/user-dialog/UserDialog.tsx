@@ -1,6 +1,5 @@
 import { useAtom } from "jotai"
 import { DialogLayout } from "../../shared/ui/Dialog"
-import { User } from "../../types"
 import { showUserModalAtom, selectedUserAtom } from "../../store/postsAtoms"
 
 export const UserDialog = () => {
